@@ -113,7 +113,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ko" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+    <html lang="ko" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -157,8 +157,15 @@ export default function RootLayout({
             }),
           }}
         />
+        <style>{`
+html {
+  font-family: ${GeistSans.style.fontFamily};
+  --font-sans: ${GeistSans.variable};
+  --font-mono: ${GeistMono.variable};
+}
+        `}</style>
       </head>
-      <body className={`${GeistSans.className} font-sans antialiased bg-background text-foreground`}>
+      <body className="antialiased">
         <JotaiProvider>{children}</JotaiProvider>
       </body>
     </html>

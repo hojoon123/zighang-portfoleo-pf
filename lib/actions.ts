@@ -4,7 +4,9 @@ import { createServerActionClient } from "@supabase/auth-helpers-nextjs"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 
+// Update the signIn function to handle redirects properly
 export async function signIn(prevState: any, formData: FormData) {
+  // Check if formData is valid
   if (!formData) {
     return { error: "Form data is missing" }
   }
@@ -12,11 +14,12 @@ export async function signIn(prevState: any, formData: FormData) {
   const email = formData.get("email")
   const password = formData.get("password")
 
+  // Validate required fields
   if (!email || !password) {
     return { error: "Email and password are required" }
   }
 
-  const cookieStore = await cookies()
+  const cookieStore = cookies()
   const supabase = createServerActionClient({ cookies: () => cookieStore })
 
   try {
@@ -29,6 +32,7 @@ export async function signIn(prevState: any, formData: FormData) {
       return { error: error.message }
     }
 
+    // Return success instead of redirecting directly
     return { success: true }
   } catch (error) {
     console.error("Login error:", error)
@@ -36,7 +40,9 @@ export async function signIn(prevState: any, formData: FormData) {
   }
 }
 
+// Update the signUp function to handle potential null formData
 export async function signUp(prevState: any, formData: FormData) {
+  // Check if formData is valid
   if (!formData) {
     return { error: "Form data is missing" }
   }
@@ -44,11 +50,12 @@ export async function signUp(prevState: any, formData: FormData) {
   const email = formData.get("email")
   const password = formData.get("password")
 
+  // Validate required fields
   if (!email || !password) {
     return { error: "Email and password are required" }
   }
 
-  const cookieStore = await cookies()
+  const cookieStore = cookies()
   const supabase = createServerActionClient({ cookies: () => cookieStore })
 
   try {
@@ -69,7 +76,7 @@ export async function signUp(prevState: any, formData: FormData) {
 }
 
 export async function signOut() {
-  const cookieStore = await cookies()
+  const cookieStore = cookies()
   const supabase = createServerActionClient({ cookies: () => cookieStore })
 
   await supabase.auth.signOut()

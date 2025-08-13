@@ -15,7 +15,7 @@ export default async function SignUpPage() {
   }
 
   // Check if user is already logged in
-  const supabase = createClient()
+  const supabase = await createClient() // Added await for createClient() to handle async cookies()
   const {
     data: { session },
   } = await supabase.auth.getSession()

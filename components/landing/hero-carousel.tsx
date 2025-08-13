@@ -117,22 +117,6 @@ export function HeroCarousel() {
               />
             ))}
           </div>
-
-          {/* 이전/다음 버튼 추가 */}
-          <button
-            onClick={() => handleSlideChange((currentSlide - 1 + bannerImages.length) % bannerImages.length)}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-white"
-            aria-label="이전 슬라이드"
-          >
-            ←
-          </button>
-          <button
-            onClick={() => handleSlideChange((currentSlide + 1) % bannerImages.length)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-white"
-            aria-label="다음 슬라이드"
-          >
-            →
-          </button>
         </div>
       </div>
     </section>

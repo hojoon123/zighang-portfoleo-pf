@@ -1,9 +1,13 @@
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createBrowserClient } from "@supabase/ssr"
 
 // Enhanced Supabase configuration check with URL validation
 export const isSupabaseConfigured = (() => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  console.log("🔍 [SUPABASE CONFIG] Checking environment variables...")
+  console.log("🔍 [SUPABASE CONFIG] URL exists:", !!url)
+  console.log("🔍 [SUPABASE CONFIG] Key exists:", !!key)
 
   // Check if environment variables exist and are not empty
   if (typeof url !== "string" || url.length === 0) {
@@ -24,6 +28,7 @@ export const isSupabaseConfigured = (() => {
       console.warn("NEXT_PUBLIC_SUPABASE_URL does not appear to be a valid Supabase URL")
       return false
     }
+    console.log("✅ [SUPABASE CONFIG] URL format is valid")
     return true
   } catch (error) {
     console.warn("NEXT_PUBLIC_SUPABASE_URL is not a valid URL:", url)
@@ -57,7 +62,7 @@ export const supabase = (() => {
   }
 
   try {
-    return createClientComponentClient()
+    return createBrowserClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
   } catch (error) {
     console.error("Failed to create Supabase client:", error)
     // Return the same mock client as fallback

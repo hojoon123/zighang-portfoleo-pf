@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 export async function signIn(prevState: any, formData: FormData) {
   console.log("🔐 [LOGIN] Starting login process...")
@@ -43,15 +44,20 @@ export async function signIn(prevState: any, formData: FormData) {
     if (data.user) {
       console.log("✅ [LOGIN] User signed in successfully:", data.user.email)
       console.log("🔄 [LOGIN] Session created:", data.session ? "yes" : "no")
+
+      revalidatePath("/", "layout")
+      console.log("🔄 [LOGIN] Redirecting to home page...")
+      redirect("/")
     } else {
       console.warn("⚠️ [LOGIN] No user data returned")
+      return { error: "Login failed. Please try again." }
     }
-
-    // Return success instead of redirecting directly
-    console.log("✅ [LOGIN] Login process completed successfully")
-    return { success: true }
   } catch (error) {
     console.error("💥 [LOGIN] Unexpected error:", error)
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+      console.log("✅ [LOGIN] Redirect successful")
+      throw error // Re-throw redirect errors
+    }
     return { error: "An unexpected error occurred. Please try again." }
   }
 }
@@ -86,6 +92,11 @@ export async function signUp(prevState: any, formData: FormData) {
     const { data, error } = await supabase.auth.signUp({
       email: email.toString(),
       password: password.toString(),
+      options: {
+        emailRedirectTo:
+          process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
+          `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/auth/callback`,
+      },
     })
 
     if (error) {
@@ -115,9 +126,13 @@ export async function signOut() {
     await supabase.auth.signOut()
     console.log("✅ [LOGOUT] User signed out successfully")
 
+    revalidatePath("/", "layout")
     redirect("/auth/login")
   } catch (error) {
     console.error("💥 [LOGOUT] Unexpected error:", error)
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+      throw error
+    }
     redirect("/auth/login")
   }
 }

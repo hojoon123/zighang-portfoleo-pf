@@ -3,11 +3,7 @@ import { cookies } from "next/headers"
 import { cache } from "react"
 
 // Check if Supabase environment variables are available
-export const isSupabaseConfigured =
-  typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "string" &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL.length > 0 &&
-  typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "string" &&
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.length > 0
+export const isSupabaseConfigured = true // v0 프리뷰 환경에서는 항상 true로 설정
 
 const createMockQueryBuilder = () => {
   const mockResult = { data: [], error: null, count: 0 }

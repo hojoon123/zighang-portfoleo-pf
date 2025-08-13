@@ -1,0 +1,188 @@
+-- created_by 컬럼을 nullable로 변경하고 기존 데이터 수정
+-- job_postings 테이블의 created_by 컬럼을 nullable로 변경
+ALTER TABLE job_postings ALTER COLUMN created_by DROP NOT NULL;
+
+-- 기존 데이터의 created_by를 NULL로 설정
+UPDATE job_postings SET created_by = NULL WHERE created_by IS NOT NULL;
+
+-- 25개의 추가 채용 공고 삽입 (created_by는 NULL로 설정)
+INSERT INTO job_postings (
+  title, company, category, location, experience, employment_type, 
+  salary, tags, description, requirements, benefits, 
+  deadline, posted_at, is_urgent, is_new, views, applicants, 
+  is_active, company_logo, company_size, created_by
+) VALUES
+('백엔드 개발자 (Node.js)', '배달의민족', 'IT·개발', '서울', '1-3년', '정규직', 
+ '5,500만원+', ARRAY['Node.js', 'Express', 'MongoDB', 'REST API'], 
+ '배달의민족 백엔드 시스템 개발을 담당합니다.', 
+ ARRAY['Node.js 개발 경험 2년 이상', 'Express.js 프레임워크 경험', 'MongoDB 사용 경험', 'REST API 설계 경험'], 
+ ARRAY['연봉 5500만원 이상', '배달비 지원', '자율출퇴근', '맥북 지급'], 
+ '2025-11-30', '2025-07-15', false, true, 445, 32, true, '/companies/baemin.png', '중견기업(300-1000명)', NULL),
+
+('iOS 개발자 (Swift)', '라인', 'IT·개발', '서울', '4-7년', '정규직', 
+ '7,500만원+', ARRAY['iOS', 'Swift', 'UIKit', 'SwiftUI'], 
+ '라인 메신저 iOS 앱 개발을 담당합니다.', 
+ ARRAY['iOS 앱 개발 경험 3년 이상', 'Swift 언어 숙련', 'UIKit/SwiftUI 경험', '앱스토어 배포 경험'], 
+ ARRAY['연봉 7500만원 이상', '스톡옵션', '일본 본사 연수', '점심 지원'], 
+ '2025-10-25', '2025-07-12', true, false, 623, 47, true, '/companies/line.png', '대기업(1000명+)', NULL),
+
+('React 개발자', '토스', 'IT·개발', '서울', '1-3년', '정규직', 
+ '6,200만원+', ARRAY['React', 'TypeScript', 'Next.js', 'Redux'], 
+ '토스 프론트엔드 개발을 담당합니다.', 
+ ARRAY['React 개발 경험 2년 이상', 'TypeScript 사용 경험', 'Next.js 프레임워크 경험', '상태 관리 라이브러리 경험'], 
+ ARRAY['연봉 6200만원 이상', '스톡옵션', '워케이션', '최신 장비 지원'], 
+ '2025-12-15', '2025-07-10', false, true, 789, 58, true, '/companies/toss.png', '중견기업(300-1000명)', NULL),
+
+('DevOps 엔지니어', '쿠팡', 'IT·개발', '서울', '4-7년', '정규직', 
+ '8,500만원+', ARRAY['AWS', 'Docker', 'Kubernetes', 'Jenkins'], 
+ '쿠팡 인프라 및 배포 시스템을 담당합니다.', 
+ ARRAY['DevOps 경험 3년 이상', 'AWS 클라우드 경험', 'Docker/Kubernetes 운영 경험', 'CI/CD 파이프라인 구축 경험'], 
+ ARRAY['연봉 8500만원 이상', '인센티브', '해외 연수', '자율출퇴근'], 
+ '2025-11-20', '2025-07-08', true, false, 567, 41, true, '/companies/coupang.png', '대기업(1000명+)', NULL),
+
+('Python 개발자', '네이버', 'IT·개발', '서울', '1-3년', '정규직', 
+ '5,800만원+', ARRAY['Python', 'Django', 'FastAPI', 'PostgreSQL'], 
+ '네이버 서비스 백엔드 개발을 담당합니다.', 
+ ARRAY['Python 개발 경험 2년 이상', 'Django/FastAPI 프레임워크 경험', 'Database 설계 경험', 'API 개발 경험'], 
+ ARRAY['연봉 5800만원 이상', '네이버 서비스 할인', '점심 지원', '사내 카페'], 
+ '2025-10-30', '2025-07-05', false, true, 423, 35, true, '/companies/naver.png', '대기업(1000명+)', NULL),
+
+('Data Analyst', '카카오', 'AI·데이터', '서울', '1-3년', '정규직', 
+ '5,200만원+', ARRAY['SQL', 'Python', 'Tableau', 'Excel'], 
+ '카카오 서비스 데이터 분석을 담당합니다.', 
+ ARRAY['데이터 분석 경험 1년 이상', 'SQL 쿼리 작성 능력', 'Python 데이터 분석 라이브러리 사용', 'Tableau/Power BI 경험'], 
+ ARRAY['연봉 5200만원 이상', '카카오 서비스 할인', '데이터 분석 도구 지원', '교육비 지원'], 
+ '2025-11-15', '2025-07-03', false, false, 334, 28, true, '/companies/kakao.png', '대기업(1000명+)', NULL),
+
+('ML Engineer', '업스테이지', 'AI·데이터', '서울', '4-7년', '정규직', 
+ '8,000만원+', ARRAY['Python', 'TensorFlow', 'PyTorch', 'MLOps'], 
+ '업스테이지 머신러닝 모델 개발을 담당합니다.', 
+ ARRAY['ML 모델 개발 경험 3년 이상', 'TensorFlow/PyTorch 숙련', '딥러닝 알고리즘 이해', 'MLOps 경험'], 
+ ARRAY['연봉 8000만원 이상', '스톡옵션', 'GPU 서버 제공', 'AI 컨퍼런스 참석'], 
+ '2025-12-01', '2025-07-01', true, true, 678, 52, true, '/companies/upstage.png', '중소기업(50-300명)', NULL),
+
+('게임 클라이언트 개발자', '넥슨', '게임', '서울', '1-3년', '정규직', 
+ '5,500만원+', ARRAY['Unity', 'C#', 'Mobile Game', 'Optimization'], 
+ '넥슨 모바일 게임 클라이언트 개발을 담당합니다.', 
+ ARRAY['Unity 개발 경험 1년 이상', 'C# 프로그래밍 숙련', '모바일 게임 개발 경험', '게임 최적화 경험'], 
+ ARRAY['연봉 5500만원 이상', '게임 아이템 지급', '자율출퇴근', '게임 개발 장비'], 
+ '2025-11-25', '2025-06-28', false, false, 445, 36, true, '/companies/nexon.png', '대기업(1000명+)', NULL),
+
+('게임 서버 개발자', '넷마블', '게임', '서울', '4-7년', '정규직', 
+ '7,200만원+', ARRAY['C++', 'Node.js', 'Redis', 'MySQL'], 
+ '넷마블 게임 서버 개발을 담당합니다.', 
+ ARRAY['게임 서버 개발 경험 3년 이상', 'C++/Node.js 숙련', 'Redis/MySQL 사용 경험', '대용량 동접 처리 경험'], 
+ ARRAY['연봉 7200만원 이상', '게임 아이템 지급', '해외 출장', '성과급'], 
+ '2025-10-20', '2025-06-25', true, false, 567, 43, true, '/companies/netmarble.png', '대기업(1000명+)', NULL),
+
+('UI/UX 디자이너', '당근마켓', '디자인', '서울', '1-3년', '정규직', 
+ '5,000만원+', ARRAY['Figma', 'Sketch', 'Prototyping', 'User Research'], 
+ '당근마켓 UI/UX 디자인을 담당합니다.', 
+ ARRAY['UI/UX 디자인 경험 2년 이상', 'Figma/Sketch 능숙한 사용', '프로토타이핑 경험', '사용자 리서치 경험'], 
+ ARRAY['연봉 5000만원 이상', '당근마켓 혜택', '디자인 도구 지원', '자율출퇴근'], 
+ '2025-11-10', '2025-06-22', false, true, 389, 31, true, '/companies/daangn.png', '중견기업(300-1000명)', NULL),
+
+('Product Designer', '무신사', '디자인', '서울', '4-7년', '정규직', 
+ '6,500만원+', ARRAY['Product Design', 'Design System', 'Fashion', 'Mobile'], 
+ '무신사 프로덕트 디자인을 담당합니다.', 
+ ARRAY['Product Design 경험 3년 이상', 'Design System 구축 경험', '패션 업계 이해', '모바일 앱 디자인 경험'], 
+ ARRAY['연봉 6500만원 이상', '무신사 할인', '패션 상품 지원', '브랜드 이벤트'], 
+ '2025-12-05', '2025-06-20', false, false, 523, 42, true, '/companies/musinsa.png', '중견기업(300-1000명)', NULL),
+
+('마케팅 매니저', 'SK텔레콤', '마케팅·광고', '서울', '4-7년', '정규직', 
+ '6,800만원+', ARRAY['Digital Marketing', 'Performance Marketing', 'Analytics', 'Campaign'], 
+ 'SK텔레콤 마케팅 캠페인을 담당합니다.', 
+ ARRAY['디지털 마케팅 경험 3년 이상', 'Performance Marketing 경험', 'Google Analytics 활용', '캠페인 기획 및 실행'], 
+ ARRAY['연봉 6800만원 이상', '통신비 지원', '마케팅 도구 지원', '해외 연수'], 
+ '2025-11-30', '2025-06-18', true, false, 612, 48, true, '/companies/skt.png', '대기업(1000명+)', NULL),
+
+('Content Marketing Specialist', '우아한형제들', '마케팅·광고', '서울', '1-3년', '정규직', 
+ '4,800만원+', ARRAY['Content Marketing', 'SEO', 'Blog', 'Social Media'], 
+ '우아한형제들 콘텐츠 마케팅을 담당합니다.', 
+ ARRAY['콘텐츠 마케팅 경험 1년 이상', 'SEO 최적화 경험', '블로그/아티클 작성', 'SNS 마케팅 경험'], 
+ ARRAY['연봉 4800만원 이상', '배달비 지원', '콘텐츠 제작 지원', '자율출퇴근'], 
+ '2025-10-15', '2025-06-15', false, true, 367, 29, true, '/companies/woowabros.png', '중견기업(300-1000명)', NULL),
+
+('영업 매니저', 'LG전자', '영업', '서울', '4-7년', '정규직', 
+ '5,500만원+', ARRAY['B2B Sales', 'Account Management', 'Negotiation', 'CRM'], 
+ 'LG전자 B2B 영업을 담당합니다.', 
+ ARRAY['B2B 영업 경험 3년 이상', '대기업 거래처 관리 경험', '협상 및 계약 체결 경험', 'CRM 시스템 활용'], 
+ ARRAY['연봉 5500만원 이상', 'LG 계열사 혜택', '영업 인센티브', '법인차량 지원'], 
+ '2025-11-20', '2025-06-12', false, false, 445, 35, true, '/companies/lg.png', '대기업(1000명+)', NULL),
+
+('물류 관리자', 'CJ대한통운', '무역·물류', '경기', '1-3년', '정규직', 
+ '4,200만원+', ARRAY['Logistics', 'Supply Chain', 'WMS', 'Inventory'], 
+ 'CJ대한통운 물류 시스템 관리를 담당합니다.', 
+ ARRAY['물류 업무 경험 1년 이상', 'WMS 시스템 사용 경험', '재고 관리 경험', '물류 프로세스 이해'], 
+ ARRAY['연봉 4200만원 이상', 'CJ 계열사 혜택', '교통비 지원', '물류 교육'], 
+ '2025-10-25', '2025-06-10', false, true, 298, 24, true, '/companies/cj.png', '대기업(1000명+)', NULL),
+
+('법무팀 변호사', '삼성전자', '법률·법무', '서울', '8-15년', '정규직', 
+ '1억원+', ARRAY['Corporate Law', 'Contract', 'IP Law', 'Compliance'], 
+ '삼성전자 법무 업무를 담당합니다.', 
+ ARRAY['변호사 자격증 보유', '기업 법무 경험 5년 이상', '계약서 검토 및 작성', '지적재산권 업무 경험'], 
+ ARRAY['연봉 1억원 이상', '삼성 계열사 혜택', '법무 교육 지원', '해외 연수'], 
+ '2025-12-10', '2025-06-08', true, false, 678, 51, true, '/companies/samsung.png', '대기업(1000명+)', NULL),
+
+('HR 매니저', '현대자동차', 'HR·총무', '서울', '4-7년', '정규직', 
+ '5,800만원+', ARRAY['HR Management', 'Recruitment', 'Performance', 'Training'], 
+ '현대자동차 인사 업무를 담당합니다.', 
+ ARRAY['HR 업무 경험 3년 이상', '채용 프로세스 관리 경험', '성과 관리 시스템 운영', '교육 프로그램 기획'], 
+ ARRAY['연봉 5800만원 이상', '현대 계열사 혜택', '자동차 할인', 'HR 교육 지원'], 
+ '2025-11-15', '2025-06-05', false, false, 456, 37, true, '/companies/hyundai.png', '대기업(1000명+)', NULL),
+
+('회계 담당자', 'KPMG', '회계·세무', '서울', '1-3년', '정규직', 
+ '4,500만원+', ARRAY['Accounting', 'Tax', 'ERP', 'Financial Analysis'], 
+ 'KPMG 회계 업무를 담당합니다.', 
+ ARRAY['회계 업무 경험 1년 이상', 'ERP 시스템 사용 경험', '세무 신고 업무 경험', '재무제표 작성 능력'], 
+ ARRAY['연봉 4500만원 이상', '회계사 자격증 취득 지원', '해외 연수', '교육비 지원'], 
+ '2025-10-30', '2025-06-03', false, true, 334, 27, true, '/companies/kpmg.png', '대기업(1000명+)', NULL),
+
+('R&D 연구원', 'LG화학', '엔지니어링·R&D', '대전', '4-7년', '정규직', 
+ '6,200만원+', ARRAY['Chemical Engineering', 'Research', 'Lab', 'Innovation'], 
+ 'LG화학 연구개발을 담당합니다.', 
+ ARRAY['화학공학 전공', 'R&D 경험 3년 이상', '실험 설계 및 분석', '논문 작성 경험'], 
+ ARRAY['연봉 6200만원 이상', 'LG 계열사 혜택', '연구비 지원', '특허 출원 인센티브'], 
+ '2025-12-01', '2025-06-01', true, false, 523, 41, true, '/companies/lgchem.png', '대기업(1000명+)', NULL),
+
+('건설 현장 관리자', '대우건설', '건설·간직', '서울', '1-3년', '정규직', 
+ '4,000만원+', ARRAY['Construction', 'Site Management', 'Safety', 'Quality'], 
+ '대우건설 현장 관리를 담당합니다.', 
+ ARRAY['건설 현장 경험 1년 이상', '안전 관리 자격증 보유', '품질 관리 경험', '현장 감독 능력'], 
+ ARRAY['연봉 4000만원 이상', '현장 수당', '안전 교육', '건설 자격증 취득 지원'], 
+ '2025-11-25', '2025-05-30', false, false, 267, 21, true, '/companies/daewoo.png', '대기업(1000명+)', NULL),
+
+('생산 기술자', '포스코', '생산·기능직', '포항', '1-3년', '정규직', 
+ '4,800만원+', ARRAY['Manufacturing', 'Production', 'Quality Control', 'Steel'], 
+ '포스코 생산 기술 업무를 담당합니다.', 
+ ARRAY['제조업 경험 1년 이상', '생산 공정 이해', '품질 관리 경험', '안전 수칙 준수'], 
+ ARRAY['연봉 4800만원 이상', '포스코 계열사 혜택', '생산 수당', '기술 교육'], 
+ '2025-10-20', '2025-05-28', false, true, 389, 31, true, '/companies/posco.png', '대기업(1000명+)', NULL),
+
+('간호사', '서울대병원', '의료·보건', '서울', '1-3년', '정규직', 
+ '3,800만원+', ARRAY['Nursing', 'Patient Care', 'Medical', 'Healthcare'], 
+ '서울대병원 간호 업무를 담당합니다.', 
+ ARRAY['간호사 면허 보유', '병원 근무 경험 1년 이상', '환자 케어 경험', '의료진 협업 능력'], 
+ ARRAY['연봉 3800만원 이상', '의료진 혜택', '교육비 지원', '야간 수당'], 
+ '2025-11-30', '2025-05-25', false, false, 445, 36, true, '/companies/snuh.png', '대기업(1000명+)', NULL),
+
+('초등학교 교사', '서울교육청', '교육', '서울', '신입', '정규직', 
+ '3,200만원+', ARRAY['Teaching', 'Education', 'Curriculum', 'Student Care'], 
+ '초등학교 교육을 담당합니다.', 
+ ARRAY['초등교육 전공', '교원 자격증 보유', '학생 지도 능력', '교육과정 이해'], 
+ ARRAY['연봉 3200만원 이상', '공무원 혜택', '방학', '교육 연수'], 
+ '2025-12-15', '2025-05-22', false, true, 567, 45, true, '/companies/seoul-edu.png', '공공기관', NULL),
+
+('PD (프로듀서)', 'CJ ENM', '미디어·엔터', '서울', '4-7년', '정규직', 
+ '5,500만원+', ARRAY['Content Production', 'Broadcasting', 'Entertainment', 'Planning'], 
+ 'CJ ENM 콘텐츠 제작을 담당합니다.', 
+ ARRAY['방송 제작 경험 3년 이상', '콘텐츠 기획 능력', '제작진 관리 경험', '엔터테인먼트 업계 이해'], 
+ ARRAY['연봉 5500만원 이상', 'CJ 계열사 혜택', '콘텐츠 제작 참여', '방송 장비 지원'], 
+ '2025-11-10', '2025-05-20', true, false, 623, 49, true, '/companies/cjenm.png', '대기업(1000명+)', NULL),
+
+('고객상담원', 'KT', '고객상담·TM', '서울', '신입', '정규직', 
+ '2,800만원+', ARRAY['Customer Service', 'Communication', 'Problem Solving', 'CRM'], 
+ 'KT 고객 상담 업무를 담당합니다.', 
+ ARRAY['고객 서비스 마인드', '원활한 의사소통 능력', '컴퓨터 활용 능력', 'CRM 시스템 사용'], 
+ ARRAY['연봉 2800만원 이상', 'KT 통신비 지원', '상담 교육', '성과 인센티브'], 
+ '2025-10-25', '2025-05-18', false, false, 298, 24, true, '/companies/kt.png', '대기업(1000명+)', NULL);

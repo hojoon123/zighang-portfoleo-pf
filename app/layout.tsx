@@ -8,7 +8,7 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
-  preload: true,
+  fallback: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
 })
 
 export const metadata: Metadata = {
@@ -120,62 +120,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={inter.variable} suppressHydrationWarning>
-      <head>
-        <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          as="style"
-          onLoad="this.onload=null;this.rel='stylesheet'"
-        />
-        <noscript>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-          />
-        </noscript>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "직행",
-              description: "AI 기반 맞춤형 채용정보 플랫폼",
-              url:
-                process.env.NODE_ENV === "production"
-                  ? process.env.NEXT_PUBLIC_BASE_URL || "https://your-domain.com"
-                  : "http://localhost:3000",
-              logo: {
-                "@type": "ImageObject",
-                url: "/images/logo.png",
-                width: 512,
-                height: 512,
-              },
-              sameAs: [
-                "https://www.facebook.com/jikhang",
-                "https://www.instagram.com/jikhang_official",
-                "https://www.linkedin.com/company/jikhang",
-              ],
-              potentialAction: {
-                "@type": "SearchAction",
-                target: {
-                  "@type": "EntryPoint",
-                  urlTemplate: `${process.env.NODE_ENV === "production" ? process.env.NEXT_PUBLIC_BASE_URL || "https://your-domain.com" : "http://localhost:3000"}/jobs?search={search_term_string}`,
-                },
-                "query-input": "required name=search_term_string",
-              },
-              publisher: {
-                "@type": "Organization",
-                name: "직행",
-                logo: {
-                  "@type": "ImageObject",
-                  url: "/images/logo.png",
-                },
-              },
-            }),
-          }}
-        />
-      </head>
       <body className="antialiased font-sans">
         <JotaiProvider>{children}</JotaiProvider>
       </body>

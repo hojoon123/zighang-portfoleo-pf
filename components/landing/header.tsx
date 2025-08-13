@@ -17,11 +17,20 @@ function Header() {
   useEffect(() => {
     // Get initial user
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      setUser(user)
-      setLoading(false)
+      try {
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser()
+
+        console.log("🔍 [HEADER] Initial user check:", { user: user?.email || "No user", error })
+
+        setUser(user)
+        setLoading(false)
+      } catch (error) {
+        console.error("❌ [HEADER] Error getting user:", error)
+        setLoading(false)
+      }
     }
 
     getUser()
@@ -30,6 +39,12 @@ function Header() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("🔄 [HEADER] Auth state changed:", {
+        event,
+        user: session?.user?.email || "No user",
+        hasSession: !!session,
+      })
+
       setUser(session?.user ?? null)
       setLoading(false)
     })
@@ -38,8 +53,15 @@ function Header() {
   }, [])
 
   const handleSignOut = async () => {
+    console.log("🚪 [HEADER] Sign out clicked")
     await signOut()
   }
+
+  console.log("🎯 [HEADER] Current state:", {
+    loading,
+    hasUser: !!user,
+    userEmail: user?.email,
+  })
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">

@@ -6,7 +6,7 @@ import ProfileTabs from "@/components/profile/profile-tabs"
 import { getUserProfile } from "@/lib/supabase/database"
 
 export default async function ProfilePage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()

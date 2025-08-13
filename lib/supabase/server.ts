@@ -78,7 +78,7 @@ function createMockQueryBuilder() {
 }
 
 // Create a cached version of the Supabase client for Server Components
-export const createClient = cache(() => {
+export const createClient = cache(async () => {
   if (!isSupabaseConfigured) {
     console.warn("Supabase is not properly configured. Using mock client for server components.")
     // Return a comprehensive mock client that matches Supabase API
@@ -122,7 +122,7 @@ export const createClient = cache(() => {
   }
 
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     return createServerComponentClient({ cookies: () => cookieStore })
   } catch (error) {
     console.error("Failed to create server Supabase client:", error)

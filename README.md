@@ -147,14 +147,17 @@ npm run dev
 
 ### 필수 환경변수
 \`\`\`env
-# Supabase 연결 정보
-SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+# Supabase 연결 정보 (필수)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 
-# 애플리케이션 URL
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+# 개발환경 리다이렉트 URL (개발시에만 필요)
+NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000
+
+# 애플리케이션 BASE URL
+NEXT_PUBLIC_BASE_URL=http://localhost:3000  # 로컬 개발
+# NEXT_PUBLIC_BASE_URL=https://your-domain.vercel.app  # 프로덕션
 \`\`\`
 
 ## 📁 프로젝트 구조

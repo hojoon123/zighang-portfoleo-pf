@@ -51,8 +51,9 @@
 ## 🏗️ 실제 구현된 기능들
 
 ### 1. 실시간 데이터베이스 연동
-```typescript
+
 // 실시간 Supabase 연동 예시
+```typescript
 const { data: jobs } = await supabase
   .from('jobs')
   .select('*')
@@ -61,7 +62,7 @@ const { data: jobs } = await supabase
 ```
 
 ### 2. 사용자 행동 이벤트 트래킹
-\`\`\`typescript
+```typescript
 // 실시간 이벤트 트래킹 구현
 const trackEvent = (eventName: string, eventData: any) => {
   await supabase.from('events').insert({

@@ -63,38 +63,21 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Enhanced font rendering to match v0 preview quality */
-    font-family: var(--font-inter, "Inter", sans-serif);
-    font-display: swap;
-    font-optical-sizing: auto;
-    font-variation-settings: "slnt" 0;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    /* v0 프리뷰와 동일한 시스템 폰트 스택 적용 */
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+      "Noto Color Emoji";
   }
 }
 
-/* Enhanced font rendering optimizations for v0 preview quality */
+/* Enhanced font rendering optimizations */
 html {
   scroll-behavior: smooth;
-  font-display: swap;
 }
 
 body {
-  font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Additional font rendering optimizations */
-  font-kerning: auto;
-  font-variant-ligatures: common-ligatures contextual;
-  font-variant-numeric: oldstyle-nums proportional-nums;
-}
-
-/* Inter font specific optimizations */
-.font-inter,
-[class*="font-inter"] {
-  font-optical-sizing: auto;
-  font-variation-settings: "slnt" 0;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 /* Core Web Vitals 최적화를 위한 기본 스타일 */

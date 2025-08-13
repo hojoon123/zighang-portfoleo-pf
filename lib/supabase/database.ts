@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 
 export async function getJobCategories() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase
     .from("job_categories")
@@ -28,7 +28,7 @@ export async function getJobPostings(
     search?: string
   },
 ) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   let query = supabase
     .from("job_postings")
@@ -86,7 +86,7 @@ export async function searchJobs(
 }
 
 export async function getJobPosting(id: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.from("job_postings").select("*").eq("id", id).eq("is_active", true).single()
 
@@ -99,7 +99,7 @@ export async function getJobPosting(id: string) {
 }
 
 export async function incrementJobViews(id: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { error } = await supabase
     .from("job_postings")
@@ -112,7 +112,7 @@ export async function incrementJobViews(id: string) {
 }
 
 export async function getUserProfile(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.from("user_profiles").select("*").eq("id", userId).single()
 
@@ -125,7 +125,7 @@ export async function getUserProfile(userId: string) {
 }
 
 export async function updateUserProfile(userId: string, updates: Partial<any>) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase.from("user_profiles").update(updates).eq("id", userId).select().single()
 
@@ -138,7 +138,7 @@ export async function updateUserProfile(userId: string, updates: Partial<any>) {
 }
 
 export async function getPageViews(startDate: Date, endDate?: Date) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   let query = supabase
     .from("page_views")
@@ -161,7 +161,7 @@ export async function getPageViews(startDate: Date, endDate?: Date) {
 }
 
 export async function getSearchEvents(startDate: Date, endDate?: Date) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   let query = supabase
     .from("events")
@@ -185,7 +185,7 @@ export async function getSearchEvents(startDate: Date, endDate?: Date) {
 }
 
 export async function getJobViewEvents(startDate: Date, endDate?: Date) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   let query = supabase
     .from("events")
@@ -209,7 +209,7 @@ export async function getJobViewEvents(startDate: Date, endDate?: Date) {
 }
 
 export async function getFilterEvents(startDate: Date) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase
     .from("events")
@@ -247,7 +247,7 @@ export async function getTopSearchQueries(period = "7d") {
       startDate.setDate(now.getDate() - 7)
   }
 
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase
     .from("events")
@@ -303,7 +303,7 @@ export async function getTopCategories(period = "7d") {
       startDate.setDate(now.getDate() - 7)
   }
 
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data, error } = await supabase
     .from("events")
@@ -350,7 +350,7 @@ export async function getTopCategories(period = "7d") {
 }
 
 export async function getAnalyticsOverview(period = "7d") {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // 기간에 따른 날짜 계산
   const now = new Date()
@@ -415,7 +415,7 @@ export async function getAnalyticsOverview(period = "7d") {
 }
 
 export async function trackPageView(pagePath: string, userId?: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.from("page_views").insert({
     page_path: pagePath,
@@ -429,7 +429,7 @@ export async function trackPageView(pagePath: string, userId?: string) {
 }
 
 export async function trackSearchEvent(searchQuery: string, resultsCount: number, userId?: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.from("events").insert({
     event_name: "Search",
@@ -448,7 +448,7 @@ export async function trackSearchEvent(searchQuery: string, resultsCount: number
 }
 
 export async function trackJobViewEvent(jobId: string, userId?: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.from("events").insert({
     event_name: "Job Viewed",
@@ -466,7 +466,7 @@ export async function trackJobViewEvent(jobId: string, userId?: string) {
 }
 
 export async function trackFilterEvent(filters: any, userId?: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.from("events").insert({
     event_name: "Filter Applied",
@@ -488,7 +488,7 @@ export async function trackFilterEvent(filters: any, userId?: string) {
 }
 
 export async function getTotalUsers() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { count, error } = await supabase.from("user_profiles").select("*", { count: "exact", head: true })
 
@@ -501,7 +501,7 @@ export async function getTotalUsers() {
 }
 
 export async function getRecentEvents(limit = 20, offset = 0) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // events와 page_views를 UNION으로 합쳐서 최신 순으로 조회
   const { data, error } = await supabase.rpc("get_recent_events", {
@@ -518,7 +518,7 @@ export async function getRecentEvents(limit = 20, offset = 0) {
 }
 
 export async function createRecentEventsFunction() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { error } = await supabase.rpc("exec", {
     sql: `

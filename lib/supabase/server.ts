@@ -1,58 +1,106 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 import { cache } from "react"
 
-// Simplified Supabase configuration check
-export const isSupabaseConfigured = (() => {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+// Check if Supabase environment variables are available
+export const isSupabaseConfigured =
+  typeof process.env.NEXT_PUBLIC_SUPABASE_URL === "string" &&
+  process.env.NEXT_PUBLIC_SUPABASE_URL.length > 0 &&
+  typeof process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY === "string" &&
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY.length > 0
 
-  if (!url || !key) {
-    console.warn("Supabase environment variables not set")
-    return false
+const createMockQueryBuilder = () => {
+  const mockResult = { data: [], error: null, count: 0 }
+  const queryBuilder = {
+    select: () => queryBuilder,
+    insert: () => queryBuilder,
+    update: () => queryBuilder,
+    delete: () => queryBuilder,
+    eq: () => queryBuilder,
+    neq: () => queryBuilder,
+    gt: () => queryBuilder,
+    gte: () => queryBuilder,
+    lt: () => queryBuilder,
+    lte: () => queryBuilder,
+    like: () => queryBuilder,
+    ilike: () => queryBuilder,
+    is: () => queryBuilder,
+    in: () => queryBuilder,
+    contains: () => queryBuilder,
+    containedBy: () => queryBuilder,
+    rangeGt: () => queryBuilder,
+    rangeGte: () => queryBuilder,
+    rangeLt: () => queryBuilder,
+    rangeLte: () => queryBuilder,
+    rangeAdjacent: () => queryBuilder,
+    overlaps: () => queryBuilder,
+    textSearch: () => queryBuilder,
+    match: () => queryBuilder,
+    not: () => queryBuilder,
+    or: () => queryBuilder,
+    filter: () => queryBuilder,
+    order: () => queryBuilder,
+    limit: () => queryBuilder,
+    range: () => queryBuilder,
+    single: () => queryBuilder,
+    maybeSingle: () => queryBuilder,
+    csv: () => queryBuilder,
+    geojson: () => queryBuilder,
+    explain: () => queryBuilder,
+    rollback: () => queryBuilder,
+    returns: () => queryBuilder,
+    then: (resolve: any) => resolve(mockResult),
+    catch: () => queryBuilder,
   }
+  return queryBuilder
+}
 
-  try {
-    new URL(url)
-    return true
-  } catch (error) {
-    console.warn("Invalid Supabase URL:", url)
-    return false
-  }
-})()
-
-// Simple mock client that returns empty data
 const createMockClient = () => ({
   auth: {
-    getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-    getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-    signInWithPassword: () =>
-      Promise.resolve({ data: { user: null, session: null }, error: { message: "Supabase not configured" } }),
-    signUp: () =>
-      Promise.resolve({ data: { user: null, session: null }, error: { message: "Supabase not configured" } }),
-    signOut: () => Promise.resolve({ error: null }),
+    getUser: async () => ({ data: { user: null }, error: null }),
+    getSession: async () => ({ data: { session: null }, error: null }),
+    signInWithPassword: async () => ({
+      data: { user: null, session: null },
+      error: { message: "Supabase not configured" },
+    }),
+    signUp: async () => ({
+      data: { user: null, session: null },
+      error: { message: "Supabase not configured" },
+    }),
+    signOut: async () => ({ error: null }),
   },
-  from: (table: string) => ({
-    select: () => Promise.resolve({ data: [], error: null }),
-    insert: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
-    update: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
-    delete: () => Promise.resolve({ data: null, error: { message: "Supabase not configured" } }),
-  }),
-  rpc: () => Promise.resolve({ data: [], error: null }),
+  from: () => createMockQueryBuilder(),
+  rpc: async () => ({ data: [], error: null }),
 })
 
 // Create a cached version of the Supabase client for Server Components
 export const createClient = cache(async () => {
   if (!isSupabaseConfigured) {
-    console.warn("Using mock Supabase client - environment variables not configured")
+    console.warn("Supabase environment variables are not set. Using mock client.")
     return createMockClient() as any
   }
 
   try {
     const cookieStore = await cookies()
-    return createServerComponentClient({ cookies: () => cookieStore })
+
+    return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
+        },
+      },
+    })
   } catch (error) {
-    console.error("Failed to create server Supabase client:", error)
+    console.error("Failed to create Supabase client:", error)
     return createMockClient() as any
   }
 })

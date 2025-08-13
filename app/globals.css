@@ -63,9 +63,9 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* v0 프리뷰와 동일한 시스템 폰트 스택 적용 */
-    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-      "Noto Color Emoji";
+    /* v0 프리뷰와 동일한 풍부한 폰트 스택 적용 */
+    font-family:
+      var(--font-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 }
 

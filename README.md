@@ -31,10 +31,10 @@
 ## 📊 Analytics 대시보드 접근 방법
 
 ### 🔐 **테스트 계정으로 바로 체험**
-\`\`\`
+```
 이메일: test@company.com
 비밀번호: test123456
-\`\`\`
+```
 
 ### 📈 **확인 가능한 데이터**
 1. **실시간 검색어 랭킹** - 가장 많이 검색된 키워드 TOP 5
@@ -49,14 +49,14 @@
 ## 🏗️ 실제 구현된 기능들
 
 ### 1. 실시간 데이터베이스 연동
-\`\`\`typescript
+```typescript
 // 실시간 Supabase 연동 예시
 const { data: jobs } = await supabase
   .from('jobs')
   .select('*')
   .eq('status', 'active')
   .order('created_at', { ascending: false });
-\`\`\`
+```
 
 ### 2. 사용자 행동 이벤트 트래킹
 \`\`\`typescript
@@ -69,10 +69,10 @@ const trackEvent = (eventName: string, eventData: any) => {
     created_at: new Date().toISOString()
   });
 };
-\`\`\`
+```
 
 ### 3. 현대적 상태 관리 (Jotai)
-\`\`\`typescript
+```typescript
 // Atomic 상태 관리 구현
 export const jobFiltersAtom = atom({
   location: "",
@@ -86,10 +86,10 @@ export const filteredJobsAtom = atom((get) => {
   const jobs = get(jobsAtom);
   return applyFilters(jobs, filters);
 });
-\`\`\`
+```
 
 ### 4. SSR/CSR 하이브리드 렌더링
-\`\`\`typescript
+```typescript
 // Server Component에서 초기 데이터 로드
 export default async function JobsPage() {
   const jobs = await getJobs();
@@ -102,10 +102,10 @@ export default async function JobsPage() {
     />
   );
 }
-\`\`\`
+```
 
 ### 5. 사용자 인증 시스템
-\`\`\`typescript
+```typescript
 // Supabase Auth 연동
 const { data, error } = await supabase.auth.signInWithPassword({
   email,
@@ -114,7 +114,7 @@ const { data, error } = await supabase.auth.signInWithPassword({
     emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || window.location.origin
   }
 });
-\`\`\`
+```
 
 ## 🎨 디자인 시스템
 
@@ -148,7 +148,7 @@ const { data, error } = await supabase.auth.signInWithPassword({
 - Supabase 계정
 
 ### 🚀 **로컬 실행**
-\`\`\`bash
+```bash
 # 의존성 설치
 pnpm install
 
@@ -157,10 +157,10 @@ pnpm dev
 
 # 프로덕션 빌드
 pnpm build
-\`\`\`
+```
 
 ### 🔐 **환경변수 설정**
-\`\`\`env
+```env
 # Supabase 연결 정보 (필수)
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
@@ -171,7 +171,7 @@ NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL=http://localhost:3000/auth/callback
 
 # 애플리케이션 BASE URL
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
-\`\`\`
+```
 
 ## 📈 프로젝트 성과
 

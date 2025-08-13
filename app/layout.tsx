@@ -1,7 +1,14 @@
 import type React from "react"
 import type { Metadata } from "next"
+import { Inter } from "next/font/google"
 import "./globals.css"
 import { JotaiProvider } from "@/components/jotai-provider"
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
   title: {
@@ -111,7 +118,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
+    <html lang="ko" className={inter.variable} suppressHydrationWarning>
       <body className="antialiased font-sans">
         <JotaiProvider>{children}</JotaiProvider>
       </body>

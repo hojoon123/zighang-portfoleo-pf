@@ -63,15 +63,22 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* 시스템 기본 폰트 스택 사용 */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    /* v0 프리뷰와 동일한 시스템 폰트 스택 적용 */
+    font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+      "Noto Color Emoji";
   }
 }
 
-/* Inter 폰트 관련 최적화 제거 */
+/* Enhanced font rendering optimizations */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 /* Core Web Vitals 최적화를 위한 기본 스타일 */
 /* CLS 방지를 위한 이미지 컨테이너 */

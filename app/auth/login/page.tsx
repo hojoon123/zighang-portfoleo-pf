@@ -5,8 +5,12 @@ import Header from "@/components/landing/header"
 import Footer from "@/components/landing/footer"
 
 export default async function LoginPage() {
+  console.log("🔍 [LOGIN PAGE] Checking Supabase configuration...")
+  console.log("🔍 [LOGIN PAGE] isSupabaseConfigured:", isSupabaseConfigured)
+
   // If Supabase is not configured, show setup message directly
   if (!isSupabaseConfigured) {
+    console.warn("⚠️ [LOGIN PAGE] Supabase not configured, showing setup message")
     return (
       <div className="flex min-h-screen items-center justify-center">
         <h1 className="text-2xl font-bold mb-4">Connect Supabase to get started</h1>
@@ -14,14 +18,32 @@ export default async function LoginPage() {
     )
   }
 
-  const supabase = await createClient()
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  try {
+    console.log("🔄 [LOGIN PAGE] Creating Supabase client...")
+    const supabase = await createClient()
+    console.log("✅ [LOGIN PAGE] Supabase client created successfully")
 
-  // If user is logged in, redirect to home page
-  if (session) {
-    redirect("/")
+    console.log("🔄 [LOGIN PAGE] Checking existing session...")
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession()
+
+    if (error) {
+      console.error("❌ [LOGIN PAGE] Error getting session:", error.message)
+    } else {
+      console.log("🔍 [LOGIN PAGE] Session check result:", session ? "logged in" : "not logged in")
+    }
+
+    // If user is logged in, redirect to home page
+    if (session) {
+      console.log("🔄 [LOGIN PAGE] User already logged in, redirecting to home...")
+      redirect("/")
+    }
+
+    console.log("✅ [LOGIN PAGE] Rendering login form...")
+  } catch (error) {
+    console.error("💥 [LOGIN PAGE] Unexpected error:", error)
   }
 
   return (

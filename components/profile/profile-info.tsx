@@ -10,7 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Edit, Save, X, Plus } from "lucide-react"
-import { updateUserProfile } from "@/lib/supabase/database"
 import { useRouter } from "next/navigation"
 import type { User } from "@supabase/supabase-js"
 import type { UserProfile } from "@/types/profile"
@@ -74,10 +73,19 @@ export default function ProfileInfo({ user, profile }: ProfileInfoProps) {
         is_profile_complete: calculateCompletion() >= 80,
       }
 
-      const { error } = await updateUserProfile(user.id, updates)
-      if (error) {
-        console.error("Error updating profile:", error)
-        return
+      const response = await fetch("/api/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          updates,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to update profile")
       }
 
       setIsEditing(false)

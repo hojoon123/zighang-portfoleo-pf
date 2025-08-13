@@ -7,28 +7,28 @@ export const isSupabaseConfigured = (() => {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
+  console.log("🔍 [SUPABASE CONFIG] Checking environment variables...")
+  console.log("🔍 [SUPABASE CONFIG] URL exists:", !!url)
+  console.log("🔍 [SUPABASE CONFIG] Key exists:", !!key)
+
   // Check if environment variables exist and are not empty
   if (typeof url !== "string" || url.length === 0) {
-    console.warn("NEXT_PUBLIC_SUPABASE_URL is not set or empty")
+    console.warn("⚠️ [SUPABASE CONFIG] NEXT_PUBLIC_SUPABASE_URL is not set or empty")
     return false
   }
 
   if (typeof key !== "string" || key.length === 0) {
-    console.warn("NEXT_PUBLIC_SUPABASE_ANON_KEY is not set or empty")
+    console.warn("⚠️ [SUPABASE CONFIG] NEXT_PUBLIC_SUPABASE_ANON_KEY is not set or empty")
     return false
   }
 
-  // Validate URL format
+  // More lenient URL validation for v0 environment
   try {
     new URL(url)
-    // Check if it's a valid Supabase URL pattern
-    if (!url.includes("supabase.co") && !url.includes("localhost")) {
-      console.warn("NEXT_PUBLIC_SUPABASE_URL does not appear to be a valid Supabase URL")
-      return false
-    }
+    console.log("✅ [SUPABASE CONFIG] URL format is valid")
     return true
   } catch (error) {
-    console.warn("NEXT_PUBLIC_SUPABASE_URL is not a valid URL:", url)
+    console.warn("⚠️ [SUPABASE CONFIG] NEXT_PUBLIC_SUPABASE_URL is not a valid URL:", url)
     return false
   }
 })()
@@ -78,20 +78,37 @@ function createMockQueryBuilder() {
 }
 
 export const createClient = cache(async () => {
+  console.log("🔄 [CREATE CLIENT] Starting client creation...")
+  console.log("🔍 [CREATE CLIENT] isSupabaseConfigured:", isSupabaseConfigured)
+
   if (!isSupabaseConfigured) {
-    console.warn("Supabase is not properly configured. Using mock client for server components.")
+    console.warn("⚠️ [CREATE CLIENT] Supabase is not properly configured. Using mock client for server components.")
     // Return a comprehensive mock client that matches Supabase API
     return {
       auth: {
-        getUser: () => Promise.resolve({ data: { user: null }, error: null }),
-        getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-        signInWithPassword: () =>
-          Promise.resolve({ data: { user: null, session: null }, error: { message: "Supabase not configured" } }),
-        signUp: () =>
-          Promise.resolve({ data: { user: null, session: null }, error: { message: "Supabase not configured" } }),
-        signOut: () => Promise.resolve({ error: null }),
+        getUser: () => {
+          console.log("🔄 [MOCK CLIENT] getUser called")
+          return Promise.resolve({ data: { user: null }, error: null })
+        },
+        getSession: () => {
+          console.log("🔄 [MOCK CLIENT] getSession called")
+          return Promise.resolve({ data: { session: null }, error: null })
+        },
+        signInWithPassword: () => {
+          console.log("🔄 [MOCK CLIENT] signInWithPassword called")
+          return Promise.resolve({ data: { user: null, session: null }, error: { message: "Supabase not configured" } })
+        },
+        signUp: () => {
+          console.log("🔄 [MOCK CLIENT] signUp called")
+          return Promise.resolve({ data: { user: null, session: null }, error: { message: "Supabase not configured" } })
+        },
+        signOut: () => {
+          console.log("🔄 [MOCK CLIENT] signOut called")
+          return Promise.resolve({ error: null })
+        },
       },
       from: (table: string) => {
+        console.log("🔄 [MOCK CLIENT] from called with table:", table)
         const queryBuilder = createMockQueryBuilder()
 
         return {
@@ -114,33 +131,45 @@ export const createClient = cache(async () => {
           }),
         }
       },
-      rpc: (functionName: string, params?: any) =>
-        Promise.resolve({ data: [], error: { message: "Supabase not configured" } }),
+      rpc: (functionName: string, params?: any) => {
+        console.log("🔄 [MOCK CLIENT] rpc called with function:", functionName)
+        return Promise.resolve({ data: [], error: { message: "Supabase not configured" } })
+      },
       raw: (sql: string) => sql,
     } as any
   }
 
   try {
+    console.log("🔄 [CREATE CLIENT] Getting cookies...")
     const cookieStore = await cookies()
+    console.log("✅ [CREATE CLIENT] Cookies obtained successfully")
 
-    return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
+    console.log("🔄 [CREATE CLIENT] Creating server client...")
+    const client = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
+            } catch {
+              // The `setAll` method was called from a Server Component.
+              // This can be ignored if you have middleware refreshing
+              // user sessions.
+            }
+          },
         },
       },
-    })
+    )
+
+    console.log("✅ [CREATE CLIENT] Server client created successfully")
+    return client
   } catch (error) {
-    console.error("Failed to create server Supabase client:", error)
+    console.error("💥 [CREATE CLIENT] Failed to create server Supabase client:", error)
     // Return the same mock client as fallback
     return {
       auth: {

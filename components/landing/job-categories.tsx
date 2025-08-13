@@ -98,28 +98,28 @@ export function JobCategories() {
         </div>
 
         {isLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-start">
             {Array.from({ length: 20 }).map((_, i) => (
-              <div key={i} className="p-4 rounded-lg border border-gray-200 animate-pulse">
-                <div className="flex items-center space-x-3 pl-3">
-                  <div className="w-8 h-8 bg-gray-200 rounded flex-shrink-0"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
+              <div key={i} className="p-4 rounded-lg border border-gray-200 animate-pulse h-16">
+                <div className="flex items-center space-x-3">
+                  <div className="w-6 h-6 bg-gray-200 rounded flex-shrink-0"></div>
+                  <div className="h-4 bg-gray-200 rounded flex-1"></div>
                 </div>
               </div>
             ))}
           </div>
         ) : categories.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 items-start">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => handleCategoryClick(category.name)}
-                className="p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all group cursor-pointer"
+                className="p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all group cursor-pointer h-16 w-full"
                 style={{ backgroundColor: `${category.color}10` }}
               >
-                <div className="flex items-center space-x-3 pl-3">
-                  <span className="text-2xl flex-shrink-0 leading-none">{category.icon}</span>
-                  <span className="text-base font-medium text-gray-700 group-hover:text-gray-900 text-left leading-tight">
+                <div className="flex items-center space-x-3 h-full">
+                  <span className="text-xl flex-shrink-0 leading-none">{category.icon}</span>
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 text-left leading-tight truncate">
                     {category.name}
                   </span>
                 </div>

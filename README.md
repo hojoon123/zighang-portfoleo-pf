@@ -20,7 +20,7 @@
 ## 💼 기술적 하이라이트
 
 ### 🔧 **핵심 기술 역량**
-- **Next.js App Router** - SSR/CSR 하이브리드 렌더링으로 성능 최적화
+- **Next.js App Router** - SSR/CSR 하이브리드 렌더링으로 성능 최적화 -vercel 무료 배포분이라 serverless 배포라서 느린 감이 있습니다...
 - **실시간 데이터베이스** - Supabase 연동으로 즉시 반영되는 사용자 데이터
 - **현대적 상태관리** - Jotai를 활용한 원자적 상태 관리 (Recoil 유사)
 - **이벤트 트래킹** - 사용자 행동 분석을 위한 커스텀 Analytics 시스템
